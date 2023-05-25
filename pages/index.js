@@ -1,8 +1,31 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import { useState } from 'react'
 import styles from '../styles/Home.module.css'
+import { signUp } from 'next-auth-sanity/client';
+import { signIn } from 'next-auth/react';
 
 export default function Home() {
+  const [Data, setData] = useState({
+    name: "",
+    email: "",
+    password: ""
+  });
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    console.log(Data);
+    try {
+      
+      const user = await signUp({
+    email : Data.email,
+    password : Data.password,
+    name: Data.name,
+      });
+      console.log(user);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <div className={styles.container}>
       <Head>
@@ -11,59 +34,13 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+      <form>
+        <input onChange={(e) => setData({...Data, email: e.target.value })} placeholder='email' type='email' value={Data.email}></input>
+        <input onChange={(e) => setData({...Data, password: e.target.value })} placeholder='name' type='text' value={Data.password}></input>
+        <input onChange={(e) => setData({...Data, name: e.target.value })} placeholder='password' type='password' value={Data.name}></input>
+        <button onClick={handleSignUp} type='submit'>Sign Up</button>
+     </form>
+      
     </div>
   )
 }
